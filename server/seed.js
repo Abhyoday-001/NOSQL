@@ -29,14 +29,23 @@ const seedData = async () => {
     console.log('Users seeded');
 
     const categories = ['Electronics', 'Wearables', 'Home & Kitchen', 'Books'];
+    const catToImg = {
+      'Electronics': 'electronics,gadget',
+      'Wearables': 'smartwatch',
+      'Home & Kitchen': 'kitchenware',
+      'Books': 'books'
+    };
+    
     const products = [];
     for (let i = 1; i <= 30; i++) {
+      const cat = categories[i % 4];
       products.push({
         title: `Product ${i}`,
-        category: categories[i % 4],
+        category: cat,
         price: Math.floor(Math.random() * 100) + 10,
         stock: 50,
-        tags: ['tag1', 'tag2']
+        tags: ['tag1', 'tag2'],
+        imageUrl: `https://loremflickr.com/640/480/${catToImg[cat]}?lock=${i}`
       });
     }
     const createdProducts = await Product.insertMany(products);

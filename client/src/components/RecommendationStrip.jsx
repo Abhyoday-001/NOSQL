@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
 import axios from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
+import ProductCard from './ProductCard';
 
 const RecommendationStrip = () => {
   const { user } = useContext(AuthContext);
@@ -20,16 +20,22 @@ const RecommendationStrip = () => {
   if (!user || recs.length === 0) return null;
 
   return (
-    <div className="container">
-      <h3 style={{ margin: '20px 0 10px' }}>Recommended For You</h3>
-      <div className="reco-strip">
-        {recs.map((r, i) => (
-          <div key={i} className="reco-card">
-            <h4>{r.productId?.title || 'Unknown Product'}</h4>
-            <p>Score: {r.score.toFixed(2)}</p>
-            <Link to={`/product/${r.productId?._id}`}>View</Link>
-          </div>
-        ))}
+    <div className="bg-emerald-50 py-8 border-b border-emerald-100">
+      <div className="max-w-[1200px] mx-auto px-5">
+        <h3 className="text-2xl font-bold text-primary mb-6">Recommended For You</h3>
+        <div className="flex gap-6 overflow-x-auto pb-4 snap-x">
+          {recs.map((r, i) => (
+            r.productId ? (
+              <div key={i} className="min-w-[260px] max-w-[280px] snap-start shrink-0">
+                <ProductCard 
+                  product={r.productId} 
+                  recoScore={r.score} 
+                  recoReason={r.reason} 
+                />
+              </div>
+            ) : null
+          ))}
+        </div>
       </div>
     </div>
   );

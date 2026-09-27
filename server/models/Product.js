@@ -4,6 +4,7 @@ const productSchema = new mongoose.Schema({
   category: { type: String, required: true },
   subCategory: { type: String },
   tags: [{ type: String }],
+  imageUrl: { type: String, default: null },
   price: { type: Number, required: true },
   attributes: { type: mongoose.Schema.Types.Mixed },
   avgRating: { type: Number, default: 0 },

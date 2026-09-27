@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
+const fs = require('fs');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const { errorHandler } = require('./middleware/errorHandler');
@@ -25,9 +27,19 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
 
+const clientBuildPath = path.join(__dirname, '../client/dist');
+if (fs.existsSync(clientBuildPath)) {
+  app.use(express.static(clientBuildPath));
+
+  app.get(/^(?!\/api).*/, (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(clientBuildPath, 'index.html'));
+  });
+}
+
 app.use(require('./middleware/errorHandler'));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5005;
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }

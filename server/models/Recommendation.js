@@ -4,7 +4,8 @@ const recommendationSchema = new mongoose.Schema({
   recommended: [{
     productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
     score: { type: Number, required: true },
-    type: { type: String, required: true }
+    type: { type: String, required: true },
+    reason: { type: String }
   }],
   generatedAt: { type: Date, default: Date.now }
 });

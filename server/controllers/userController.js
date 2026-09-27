@@ -43,7 +43,14 @@ exports.login = async (req, res, next) => {
 exports.getRecommendations = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const recs = await Recommendation.findOne({ userId: id }).populate('recommended.productId');
+    let recs = await Recommendation.findOne({ userId: id }).populate('recommended.productId');
+    
+    if (!recs || recs.recommended.length === 0) {
+      const { generateForUser } = require('../services/recommendationEngine');
+      await generateForUser(id);
+      recs = await Recommendation.findOne({ userId: id }).populate('recommended.productId');
+    }
+    
     if (!recs) return res.json({ recommended: [] });
     res.json(recs);
   } catch (error) { next(error); }
